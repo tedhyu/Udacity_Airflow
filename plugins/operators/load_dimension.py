@@ -1,11 +1,10 @@
-from airflow.contrib.hooks.aws_hook import AwsHook
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
 
+class LoadDimensionOperator(BaseOperator):
 
-class LoadFactOperator(BaseOperator):
-    ui_color = '#F98866' 
+    ui_color = '#80BD9E'
     copy_sql = """
         INSERT INTO {}
         {}
@@ -17,7 +16,7 @@ class LoadFactOperator(BaseOperator):
                  sql="",
                  *args, **kwargs):
 
-        super(LoadFactOperator, self).__init__(*args, **kwargs)
+        super(LoadDimensionOperator, self).__init__(*args, **kwargs)
         self.table = table
         self.redshift_conn_id = redshift_conn_id
         self.sql = sql
@@ -27,7 +26,7 @@ class LoadFactOperator(BaseOperator):
         self.log.info("Clearing data from destination Redshift table")
         redshift.run("DELETE FROM {}".format(self.table))
         self.log.info("Copying Data to {}".format(self.table))
-        formatted_sql = LoadFactOperator.copy_sql.format(
+        formatted_sql = LoadDimensionOperator.copy_sql.format(
             self.table,
             self.sql)
         redshift.run(formatted_sql)
