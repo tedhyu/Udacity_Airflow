@@ -22,6 +22,7 @@ default_args = {
 dag = DAG('udac_example_dag',
           description='Load and transform data in Redshift with Airflow',
           start_date = datetime.now(),
+          schedule_interval="@hourly",
           catchup=False,
 
 )
